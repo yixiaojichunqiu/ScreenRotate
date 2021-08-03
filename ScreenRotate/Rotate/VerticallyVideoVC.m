@@ -167,7 +167,7 @@
 
 -(void)jumpToHVideo{
     HorizontallyVideoVC* horizontallyVideoVC = [[HorizontallyVideoVC alloc] init];
-    //horizontallyVideoVC.transitioningDelegate = self.customAnimator;
+    horizontallyVideoVC.transitioningDelegate = self.customAnimator;
     horizontallyVideoVC.playView = self.playView;
     horizontallyVideoVC.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:horizontallyVideoVC animated:YES completion:^{

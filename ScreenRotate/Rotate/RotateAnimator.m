@@ -47,28 +47,40 @@
     BOOL isPresent = [fromViewController.presentedViewController isEqual:toViewController];//如果底层的视图弹出的视图是顶层的，那么是present出来的
     
     if (isPresent) {
-        [containerView bringSubviewToFront:fromViewController.view];
+        //[containerView bringSubviewToFront:fromViewController.view];
         
         CGSize size = containerView.frame.size;
-        [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.equalTo(@(size.width));
-            make.height.equalTo(@(size.height));
-            make.center.equalTo(playView.superview);
-        }];
+//        [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.width.equalTo(@(size.width));
+//            make.height.equalTo(@(size.height));
+//            make.center.equalTo(playView.superview);
+//        }];
         
+        UIView *tempView = [[UIView alloc]init];
+        tempView.bounds = CGRectMake(0, 0, size.height, size.height/16*9);
+        tempView.center = CGPointMake(size.height/16*9/2,size.height/2 );
+        tempView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+        tempView.backgroundColor = [UIColor redColor];
+        [containerView addSubview:tempView];
+        
+        playView.hidden = true;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-            [playView.superview layoutIfNeeded];
-            playView.transform = CGAffineTransformMakeRotation(M_PI_2);
+            //[playView.superview layoutIfNeeded];
+            //playView.transform = CGAffineTransformMakeRotation(M_PI_2);
+            tempView.bounds = CGRectMake(0, 0, size.width, size.height);
+            tempView.center = CGPointMake(size.width/2, size.height/2);
+            tempView.transform = CGAffineTransformMakeRotation(0);
             toViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
             
         } completion:^(BOOL finished) {
-            
-            [playView removeFromSuperview];
-            [toViewController.view addSubview:playView];
-            playView.transform = CGAffineTransformMakeRotation(0);
-            [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(toViewController.view).insets(UIEdgeInsetsZero);
-            }];
+            playView.hidden = false;
+            [tempView removeFromSuperview];
+//            [playView removeFromSuperview];
+//            [toViewController.view addSubview:playView];
+//            playView.transform = CGAffineTransformMakeRotation(0);
+//            [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.edges.equalTo(toViewController.view).insets(UIEdgeInsetsZero);
+//            }];
             
             BOOL wasCancelled = [transitionContext transitionWasCancelled];
             //设置transitionContext通知系统动画执行完毕
@@ -76,44 +88,52 @@
             
         }];
     }else{
-        [containerView bringSubviewToFront:fromViewController.view];
+        //[containerView bringSubviewToFront:fromViewController.view];
         playView = [fromViewController.view viewWithTag:100];
-        
-        CGFloat width = containerView.frame.size.width;
-        CGFloat height = width * (9 / 16.0f);
-        [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            
-            make.width.mas_equalTo(@(width));
-            make.height.equalTo(@(height));
-            make.center.equalTo(playView.superview).centerOffset(CGPointMake(-(containerView.frame.size.height - height) / 2.0, 0));
-        }];
-        
-        
+        CGSize size = containerView.frame.size;
+//        CGFloat width = containerView.frame.size.width;
+//        CGFloat height = width * (9 / 16.0f);
+//        [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//
+//            make.width.mas_equalTo(@(width));
+//            make.height.equalTo(@(height));
+//            make.center.equalTo(playView.superview).centerOffset(CGPointMake(-(containerView.frame.size.height - height) / 2.0, 0));
+//        }];
+        UIView *tempView = [[UIView alloc]init];
+        tempView.bounds = CGRectMake(0, 0, size.height, size.width);
+        tempView.center = CGPointMake(size.width/2,size.height/2 );
+        tempView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        tempView.backgroundColor = [UIColor redColor];
+        [containerView addSubview:tempView];
+        playView.hidden = true;
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-            [playView.superview layoutIfNeeded];
-            playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-            
+//            [playView.superview layoutIfNeeded];
+//            playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            tempView.bounds = CGRectMake(0, 0, containerView.bounds.size.width, containerView.bounds.size.width/16*9);
+            tempView.center = CGPointMake(containerView.bounds.size.width/2,containerView.bounds.size.width/16*9/2 );
+            tempView.transform = CGAffineTransformMakeRotation(0);
+
             fromViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
             
         } completion:^(BOOL finished) {
-            
-            
-            [playView removeFromSuperview];
-            
-            if ([toViewController isKindOfClass:[UINavigationController class]]) {
-                UIViewController* vc = ((UINavigationController*)toViewController).viewControllers.lastObject;
-                [vc.view addSubview:playView];
-            }else{
-                [toViewController.view addSubview:playView];
-            }
-            
-            playView.transform = CGAffineTransformMakeRotation(0);
-            [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(playView.superview.mas_top).offset(0);
-                make.left.equalTo(playView.superview.mas_left).offset(0);
-                make.height.mas_equalTo(@(width * (9 / 16.0f)));
-                make.right.equalTo(playView.superview.mas_right).offset(0);
-            }];
+            playView.hidden = false;
+            [tempView removeFromSuperview];
+//            [playView removeFromSuperview];
+//
+//            if ([toViewController isKindOfClass:[UINavigationController class]]) {
+//                UIViewController* vc = ((UINavigationController*)toViewController).viewControllers.lastObject;
+//                [vc.view addSubview:playView];
+//            }else{
+//                [toViewController.view addSubview:playView];
+//            }
+//
+//            playView.transform = CGAffineTransformMakeRotation(0);
+//            [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.top.equalTo(playView.superview.mas_top).offset(0);
+//                make.left.equalTo(playView.superview.mas_left).offset(0);
+//                make.height.mas_equalTo(@(width * (9 / 16.0f)));
+//                make.right.equalTo(playView.superview.mas_right).offset(0);
+//            }];
             
             
             BOOL wasCancelled = [transitionContext transitionWasCancelled];
