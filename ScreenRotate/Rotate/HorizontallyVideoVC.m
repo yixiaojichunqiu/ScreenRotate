@@ -7,7 +7,7 @@
 //
 
 #import "HorizontallyVideoVC.h"
-
+#import "Masonry.h"
 @interface HorizontallyVideoVC ()
 
 @end
@@ -52,6 +52,13 @@
 
 -(void)viewDidAppear:(BOOL)animated{
     NSLog(@"viewDidAppear");
+    [self.playView removeFromSuperview];
+    [self.view addSubview:self.playView];
+    [self.playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(self.view.bounds.size.width);
+        make.height.mas_equalTo(self.view.bounds.size.height);
+        make.center.mas_equalTo(self.view);
+    }];
 }
 
 -(void)viewWillDisappear:(BOOL)animated{

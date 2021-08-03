@@ -12,5 +12,5 @@
 
 /** <#description#> */
 @property (nonatomic, copy) void (^didDismiss)();
-
+@property (strong, nonatomic) UIView *playView;
 @end

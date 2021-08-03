@@ -95,6 +95,18 @@
     self.navigationController.navigationBarHidden = YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [self.playView removeFromSuperview];
+    [self.view addSubview:self.playView];
+    [self.playView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_top).offset(0);
+        make.left.equalTo(self.view.mas_left).offset(0);
+        make.right.equalTo(self.view.mas_right).offset(0);
+        make.height.equalTo(self.playView.mas_width).multipliedBy(9 / 16.0f);
+    }];
+}
+
 -(void)dealloc{
     NSLog(@"视屏小屏控制器销毁了");
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -155,7 +167,8 @@
 
 -(void)jumpToHVideo{
     HorizontallyVideoVC* horizontallyVideoVC = [[HorizontallyVideoVC alloc] init];
-    horizontallyVideoVC.transitioningDelegate = self.customAnimator;
+    //horizontallyVideoVC.transitioningDelegate = self.customAnimator;
+    horizontallyVideoVC.playView = self.playView;
     horizontallyVideoVC.modalPresentationStyle = UIModalPresentationFullScreen;
     [self presentViewController:horizontallyVideoVC animated:YES completion:^{
         NSLog(@"presentViewController执行完毕，有的时候控制器切换如果有视频在播放可能会有顿，可在执行前和完成之后做一些暂停开始的处理");
